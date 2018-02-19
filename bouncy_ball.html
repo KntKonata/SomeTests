@@ -36,59 +36,79 @@ input[type='button'] {
 </body>
 
 <script>
+	//Array to store the indexs of every balls
 let balls = [];
+	//Arrays to store the X and Y moving speed of every balls
 let ballMomentumX = [];
 let ballMomentumY = [];
+	//Arrays to store the X and Y positions of every balls
 let ballPosX = [];
 let ballPosY = [];
 
+	/*********************************************/
+	/* Function to create new ball on the screen */
+	/*********************************************/
 function createBall(){
+		//Create a new div and store it in 'newBall' variable
 	newBall = document.createElement('div');
+		//Add the class 'ball' to the newly created DIV
 	newBall.classList.add('ball');
-
+		//Generate random Red Green and Blue colors for the balls
 	let ColorR = Math.floor(Math.random()*255);
 	let ColorG = Math.floor(Math.random()*255);
 	let ColorB = Math.floor(Math.random()*255);
-
+		//Add the new background color to the newly created DIV
 	newBall.style.backgroundColor = ('rgb('+ColorR+','+ColorG+','+ColorB+')');
-
-	let ballsNumb = balls.length;
-
-	balls.push(ballsNumb);
+		//Push into the array 'balls' the new ball that has been created
+	balls.push(balls.length);
+		//Push into the moving arrays a random X and Y speed going from 1 to 5
 	ballMomentumX.push(Math.floor(Math.random()*5+1));
 	ballMomentumY.push(Math.floor(Math.random()*5+1));
+		//Push into the position arrays the new X and Y position of the ball ( the center of the canvas )
 	ballPosX.push(190);
 	ballPosY.push(140);
-
+		//Set the 'ball' DIV as a child of the 'box' DIV
 	document.getElementById('box').appendChild(newBall);
 }
 
+	/*********************************************/
+	/*   Function that dictates the balls life   */
+	/*********************************************/
 function lifespanBall(){
+		//Variable that defines the 'ball' DIV
 	let ball = document.getElementsByClassName('ball');
-
+		//Loop used to dictate the life of every balls in the array
 	for(i=0;i<balls.length;i++){
-
+			//Change the X position of the ball using its X moving speed
 		ballPosX[i] += ballMomentumX[i];
+			//Set the new X position to its ball
 		ball[i].style.left = ballPosX[i];
-
+			//Change the Y position of the ball using its Y moving speed
 		ballPosY[i] += ballMomentumY[i];
+			//Set the new Y position to its ball
 		ball[i].style.top = ballPosY[i];
-
+			//Checks if the ball is touching the left side of the screen
 		if(ballPosX[i]<0){
+				//If yes, change it's X moving speed (ex. 4 -> -4 // -2 -> 2)
 			ballMomentumX[i] = ballMomentumX[i] - ( ballMomentumX[i] * 2 );
+			//Checks if the ball is touching the right side of the screen
 		} else if(ballPosX[i]>380){
+				//If yes, change it's X moving speed (ex. 4 -> -4 // -2 -> 2)
 			ballMomentumX[i] = ballMomentumX[i] - ( ballMomentumX[i] * 2 );
+			//Checks if the ball is touching the top side of the screen
 		} else if(ballPosY[i]<0){
+				//If yes, change it's Y moving speed (ex. 4 -> -4 // -2 -> 2)
 			ballMomentumY[i] = ballMomentumY[i] - ( ballMomentumY[i] * 2 );
+			//Checks if the ball is touching the bottom side of the screen
 		} else if(ballPosY[i]>280){
+				//If yes, change it's Y moving speed (ex. 4 -> -4 // -2 -> 2)
 			ballMomentumY[i] = ballMomentumY[i] - ( ballMomentumY[i] * 2 );
 		}
-
-		
 	}
-
+		//Set a timeout and recall the function lifespanBall after 10 ms
 	setTimeout(lifespanBall, 10);
 }
 
+	//Initialize the balls lifespan
 lifespanBall();
 </script>

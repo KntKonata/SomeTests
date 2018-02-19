@@ -45,11 +45,13 @@
 </body>
 
 <script>
+	//Variables for the fireworks' rockets
 let fireworks = [];
 let fireworksFuse = [];
 let fireworksFuseInherit = [];
 let fireworksPosY = [];
-
+	
+	//Variables for the sparks
 let sparksss = [];
 let sparkFuse = [];
 let sparkPosX = [];
@@ -57,36 +59,47 @@ let sparkPosY = [];
 let sparkMomentumHozi = [];
 let sparkMomentumVert = [];
 let sparkOpacity = [];
-
+	
+	/*********************************************/
+	/* Function to create the fireworks' rockets */
+	/*********************************************/
 function createFireworks(){
+		//Set a random starting position ( Between 0 and 799 )
 	let positionX = Math.floor(Math.random()*800);
+		//Set a random fusing time ( Betweem 200 and 600 )
 	let fuseTime = Math.floor(Math.random()*400+200);
-
-	let colorR = Math.floor(Math.random()*255+128);
-	let colorG = Math.floor(Math.random()*255+128);
-	let colorB = Math.floor(Math.random()*255+128);
-
+		//Set random Red, Green and blue Colors ( Between 128 and 255 )
+	let colorR = Math.floor(Math.random()*127+128);
+	let colorG = Math.floor(Math.random()*127+128);
+	let colorB = Math.floor(Math.random()*127+128);
+		//Create a new DIV
 	newFirework = document.createElement('div');
+		//Add the class FIREWORK to the newly created DIV
 	newFirework.classList.add('firework');
-
+		//Set the Styles to the FIREWORK DIV
 	newFirework.style.backgroundColor = 'rgb('+colorR+','+colorG+','+colorB+')';
 	newFirework.style.left = positionX;
 	newFirework.style.bottom = 0;
-
+		//Push the new indexs in the fireworks' rockets arrays
 	fireworks.push(fireworks.length);
 	fireworksFuse.push(fuseTime);
 	fireworksFuseInherit.push(fuseTime);
 	fireworksPosY.push(0);
-
+		//Add the FIREWORK DIV as a child of CANVAS
 	document.getElementById('canvas').appendChild(newFirework);
 }
 
+	/*********************************************/
+	/*       Function to create the sparks       */
+	/*********************************************/
 function createSparks(positionX, positionY, id, fuse){
+		//Variable that defines the FIREWORK DIV
 	let fireW = document.getElementsByClassName('firework');
-
+		//Create a new DIV
 	newSpark = document.createElement('div');
+		//Add the class SPARK to the newly created DIV
 	newSpark.classList.add('spark');
-
+		//Push the new indexs in the fireworks' rockets arrays
 	sparksss.push(sparksss.length);
 	sparkFuse.push(fuse);
 	sparkPosX.push(positionX);
@@ -94,71 +107,96 @@ function createSparks(positionX, positionY, id, fuse){
 	sparkMomentumVert.push((Math.random()*10-5));
 	sparkMomentumHozi.push((Math.random()*10-5));
 	sparkOpacity.push(1);
-
+		//Set the Styles to the FIREWORK DIV
 	newSpark.style.backgroundColor = fireW[id].style.backgroundColor;
 	newSpark.style.left = positionX;
 	newSpark.style.bottom = positionY;
-
+		//Add the FIREWORK DIV as a child of CANVAS
 	document.getElementById('canvas').appendChild(newSpark);
 }
 
+	/*********************************************/
+	/*     Function to detonate the firework     */
+	/*********************************************/
 function detonateFirework(id){
+		//Variable that defines the FIREWORK DIV
 	let fireW = document.getElementsByClassName('firework');
-
+		//Variable that defines the Randomness of the sparks
 	randTestOfdoom = Math.floor(fireworksFuseInherit[id]/12);
-
+		//Loop that creates as many sparks as needed
 	for(i=0;i<randTestOfdoom;i++){
+			//Call the function to create sparks
 		createSparks(fireW[id].style.left, fireworksPosY[id], id, randTestOfdoom);
 	}
-
+		//Remove the FIREWORK DIV from the HTML doc
 	fireW[id].remove();
-
+		//Find the index of the newly detonated firework
 	var index = fireworksFuse.indexOf(0);
+		//Remove the newly detonated firework from the fireworks' array
 	fireworks.splice(index, 1);
 	fireworksPosY.splice(index, 1);
 	fireworksFuse.splice(index, 1);
 	fireworksFuseInherit.splice(index, 1);
-
 }
 
+	/*********************************************/
+	/* Function that dictates the fireworks life */
+	/*********************************************/
 function lifespanFireworks(){
+		//Variable that defines the FIREWORK DIV
 	let fireW = document.getElementsByClassName('firework');
+		//Loop that checks if the firework's rocket need to detonate or not
 	for(i=0;i<fireworks.length;i++){
 		if(fireworksFuse[i]<=0){
+				//Call function Detonate if the firework's rocket fuse time is under or equal to 0
 			detonateFirework(i);
 		} else {
+				//Make the firework's rocket moving up
 			fireworksPosY[i] += 1;
-			fireworksFuse[i] -= 1;
 			fireW[i].style.bottom = fireworksPosY[i];
+				//Decrease the firework's rocket fuse time
+			fireworksFuse[i] -= 1;
 		}
 	}
-
+		//Set a timeout and recall the function lifespanFireworks after 10 ms
 	setTimeout(lifespanFireworks, 10);
 }
 
+	/*********************************************/
+	/*   Function that dictates the spark life   */
+	/*********************************************/
 function lifespanSparks(){
+		//Variable that defines the SPARK DIV
 	let sparKy = document.getElementsByClassName('spark');
+		//Loop that checks if the spark's fuse time is over or equal to 0
 	for(i=0;i<sparksss.length;i++){
 		if(sparkFuse.length!=0){
+				//If the spark's fuse time isn't 0
 			if(sparkFuse[i]!=0){
+					//Change the X and Y positions' variables of the spark
 				sparkPosX[i] = parseFloat(sparkPosX[i])+sparkMomentumHozi[i];
 				sparkPosY[i] = parseFloat(sparkPosY[i])+sparkMomentumVert[i];
-
+					//Change the opacity's variable of the spark using its fuse time
 				sparkOpacity[i] = sparkFuse[i]/10;
-
+					//Move the spark to its new X and Y position
 				sparKy[i].style.left = sparkPosX[i];
 				sparKy[i].style.bottom = sparkPosY[i];
+					//Set the new opacity to the spark
 				sparKy[i].style.opacity = sparkOpacity[i];
-
+					//Change the size of the spark using its fuse time
 				sparKy[i].style.width = Math.floor(sparkFuse[i]/5);
 				sparKy[i].style.height = Math.floor(sparkFuse[i]/5);
-
+					//Change the shadow of the spark using its fuse time
 				sparKy[i].style.boxShadow = "0 0 30px 0px "+sparKy[i].style.backgroundColor;
-
+					//Decrease the spark's fuse time
 				sparkFuse[i] -= 1;
+				//if the spark's fuse time is 0
 			} else {
+					//Remove the SPARK DIV from the HTML doc
 				sparKy[i].remove();
+					//Find the index of the newly detonated firework
 				var index = sparkFuse.indexOf(0);
+					//Remove the newly removed spark from the sparks' array
 				sparksss.splice(index, 1);
 				sparkPosX.splice(index, 1);
 				sparkPosY.splice(index, 1);
@@ -169,18 +207,23 @@ function lifespanSparks(){
 			}
 		}
 	}
-
+		//Set a timeout and recall the function lifespanSparks after 10 ms
 	setTimeout(lifespanSparks, 10);
 }
 
+	/*********************************************/
+	/*   Function that keeps creating firework   */
+	/*********************************************/
 function generateFireworks(){
+		//Call the createFireworks function
 	createFireworks();
-
+		//Set a timeout and recall the function generateFireworks after 500 ms
 	setTimeout(generateFireworks, 500);
 }
 
+	//Initialize the constant generating of fireworks
 generateFireworks();
-
+	//Initialize the lifespan of both fireworks and sparks
 lifespanFireworks();
 lifespanSparks();
 </script>

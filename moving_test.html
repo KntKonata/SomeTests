@@ -1,0 +1,410 @@
+<style>
+body {
+	background: black;
+	margin: 0;
+	padding: 0;
+}
+
+.test1{
+	background: #d8e89b;
+	width: 40px;
+	height: 40px;
+	transform: translateZ(-20px) translateX(40px);
+}
+
+.test12{
+	transform: translateZ(-10px) translateX(40px);
+}
+
+.test2{
+	background: #bacc78;
+	width: 40px;
+	height: 30px;
+	transform: rotateZ(90deg) rotateX(90deg) translateZ(20px) translateY(-25px);
+}
+.test3{
+	background: #9baf52;
+	width: 40px;
+	height: 30px;
+	transform: rotateX(90deg) translateZ(-20px) translateY(-25px) translateX(-40px);
+}
+
+.playerFace1{
+	background: #9cd9e2;
+	width: 30px;
+	height: 30px;
+	transform: translateZ(-20px) translateX(40px);
+}
+.playerFace2{
+	background: #7dbdc6;
+	width: 30px;
+	height: 60px;
+	transform: rotateZ(90deg) rotateX(90deg) translateZ(25px) translateY(-50px);
+}
+.playerFace3{
+	background: #5da1aa;
+	width: 30px;
+	height: 60px;
+	transform: rotateX(90deg) translateZ(-15px) translateY(-50px) translateX(-20px);
+}
+
+.floorTile {
+	transform: rotateX(45deg) rotateZ(45deg);
+	perspective: 40000px;
+    transform-style: preserve-3d;
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-left: -88px;
+}
+
+.canvas2 {
+	transform: rotateX(45deg) rotateZ(45deg);
+	perspective: 40000px;
+    transform-style: preserve-3d;
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-left: -88px;
+}
+
+#player {
+	transform: rotateX(45deg) rotateZ(45deg);
+	perspective: 40000px;
+    transform-style: preserve-3d;
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-left: -88px;
+	margin-top: 5px;
+}
+
+#debug {
+	position: absolute;
+	border: 2px solid white;
+	color: white;
+	top: 0;
+	right: 0;
+	width: calc(6*19px);
+	left: calc(100% / 2 - (6 * 19px) / 2);
+	z-index: 100;
+}
+
+#debug>div {
+	width: 5px;
+	height: 5px;
+	border-left: 1px solid rgb(50,50,50);
+	border-bottom: 1px solid rgb(50,50,50);
+	float: left;
+}
+</style>
+
+<body>
+	<div id='debug'>
+
+	</div>
+	<div id='canvas'>
+		<!-- -->
+		<div id='player'></div>
+		<div class='canvas2'></div>
+	</div>
+</body>
+
+<script>
+let tileMap = [
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,
+	0,0,0,0,1,1,1,2,2,2,2,2,1,1,1,0,0,0,0,
+	0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,
+	0,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,0,0,
+	0,0,1,1,1,0,0,0,0,1,0,0,0,0,1,1,1,0,0,
+	0,1,1,1,1,0,0,0,0,1,0,0,0,0,1,1,1,1,0,
+	0,1,2,1,0,0,0,0,1,1,1,0,0,0,0,1,2,1,0,
+	0,1,2,1,1,0,0,1,1,1,1,1,0,0,1,1,2,1,0,
+	0,1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,2,1,0,
+	0,1,2,1,1,0,0,1,1,1,1,1,0,0,1,1,2,1,0,
+	0,1,2,1,0,0,0,0,1,1,1,0,0,0,0,1,2,1,0,
+	0,1,1,1,1,0,0,0,0,1,0,0,0,0,1,1,1,1,0,
+	0,0,1,1,1,0,0,0,0,1,0,0,0,0,1,1,1,0,0,
+	0,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,0,0,
+	0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,
+	0,0,0,0,1,1,1,2,2,2,2,2,1,1,1,0,0,0,0,
+	0,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+];
+
+let positionPlayer = [
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+];
+
+let steps = 0;
+
+let StartPositionX = window.innerWidth/2;
+let StartPositionY = 0;
+
+let lines = 19;
+
+document.getElementById('debug').style.width = lines*6;
+document.getElementById('debug').style.left = (window.innerWidth/2)-((lines*6)/2);
+
+
+function createMap(){
+	let positionX = StartPositionX;
+	let positionY = StartPositionY;
+
+	let stop = false;
+
+	let counter = -1;
+	let counterMax = lines-1;
+
+	for(i=0;i<tileMap.length;i++){
+
+		if(counter==counterMax){
+			positionX -= (counterMax+1)*28;
+			positionY -= (counterMax-1)*20;
+			counter = 0;
+		} else {
+			positionX += 28;
+			positionY += 20;
+			counter++;
+		}
+
+		if(tileMap[i]==1){
+			newTile = document.createElement('div');
+			newTile.classList.add('floorTile');
+			newTile.style.left = positionX;
+			newTile.style.top = positionY;
+			document.getElementById('canvas').appendChild(newTile);
+
+			addTile1 = document.createElement('div');
+			addTile1.classList.add('test1');
+
+			addTile1.style.marginTop = -20;
+			addTile1.style.marginLeft = 6;
+
+			newTile.appendChild(addTile1);/*
+			addTile2 = document.createElement('div');
+			addTile2.classList.add('test2');
+			newTile.appendChild(addTile2);
+			addTile3 = document.createElement('div');
+			addTile3.classList.add('test3');
+			newTile.appendChild(addTile3);*/
+		}
+	}
+}
+
+let direction = 0;
+
+function lifespanPlayer(){
+	let player = document.getElementById('player');
+	let posX = 2.8;
+	let posY = 2;
+	if(steps>0){
+		if(direction==1){
+			for(i=0;i<positionPlayer.length;i++){
+				if(positionPlayer[i]==1 && tileMap[(i-lines)]==1){
+						player.style.left = parseFloat(player.style.left) + posX;
+						player.style.top = parseInt(player.style.top) - posY;
+						if(steps==1){
+							positionPlayer[i] = 0;
+							positionPlayer[i-lines] = 1;
+							updateMap();
+							createPlayer();
+						}
+				}
+			}
+		} else if(direction==2){
+			for(i=0;i<positionPlayer.length;i++){
+				if(positionPlayer[i]==1&&stop==false){
+					if(tileMap[i+1]==1){
+						player.style.left = parseFloat(player.style.left) + posX;
+						player.style.top = parseInt(player.style.top) + posY;
+						if(steps==1){
+							positionPlayer[i] = 0;
+							positionPlayer[i+1] = 1;
+							stop = true;
+							updateMap();
+							createPlayer();
+						}
+					}
+				}
+			}
+		} else if(direction==3){
+			for(i=0;i<positionPlayer.length;i++){
+				if(positionPlayer[i]==1&&stop==false){
+					if(tileMap[i+lines]==1){
+						player.style.left = parseFloat(player.style.left) - posX;
+						player.style.top = parseInt(player.style.top) + posY;
+						if(steps==1){
+							positionPlayer[i] = 0;
+							positionPlayer[i+lines] = 1;
+							stop = true;
+							updateMap();
+							createPlayer();
+						}
+					}
+				}
+			}
+		} else if(direction==4){
+			for(i=0;i<positionPlayer.length;i++){
+				if(positionPlayer[i]==1){
+					if(tileMap[(i-1)]==1){
+						player.style.left = parseFloat(player.style.left) - posX;
+						player.style.top = parseInt(player.style.top) - posY;
+						if(steps==1){
+							positionPlayer[i] = 0;
+							positionPlayer[(i-1)] = 1;
+							updateMap();
+							createPlayer();
+						}
+					}
+				}
+			}
+		}
+		steps--;
+	}
+	setTimeout(lifespanPlayer, 10);
+}
+
+document.onkeypress = function (e) {
+	//console.log(e.keyCode);
+	if(steps==0){
+		if(e.keyCode==119){direction=1;steps=10;}
+		else if(e.keyCode==100){direction=2;steps=10;stop=false;}
+		else if(e.keyCode==115){direction=3;steps=10;stop=false;}
+		else if(e.keyCode==97){direction=4;steps=10;}
+	}
+}
+
+function updateMap(){
+	let map = document.getElementById('debug');
+
+	while(map.firstChild){
+		map.removeChild(map.firstChild);
+	}
+
+	for(i=0;i<tileMap.length;i++){
+		if(tileMap[i]==1){
+			if(positionPlayer[i]==1){
+				addMap = document.createElement('div');
+				addMap.style.backgroundColor = '#9cd9e2';
+				map.appendChild(addMap);
+			} else {
+				addMap = document.createElement('div');
+				addMap.style.backgroundColor = '#d8e89b';
+				map.appendChild(addMap);
+			}
+		} else if(tileMap[i]==2){
+			addMap = document.createElement('div');
+			addMap.style.backgroundColor = '#9baf52';
+			map.appendChild(addMap);
+		} else {
+			addMap = document.createElement('div');
+			addMap.style.backgroundColor = '#333333';
+			map.appendChild(addMap);
+		}
+	}
+}
+
+function createPlayer(){
+
+	clearPlayer();
+
+	let positionPlayerX = StartPositionX;
+	let positionPlayerY = StartPositionY;
+
+	let counter = -1;
+	let counterMax = lines-1;
+
+	for(i=0;i<positionPlayer.length;i++){
+
+		if(counter==counterMax){
+			positionPlayerX -= (counterMax+1)*28;
+			positionPlayerY -= (counterMax-1)*20;
+			counter = 0;
+		} else {
+			positionPlayerX += 28;
+			positionPlayerY += 20;
+			counter++;
+		}
+
+		if(positionPlayer[i]==1){
+			newPlayer = document.getElementById('player');
+			newPlayer.style.left = positionPlayerX+9;
+			newPlayer.style.top = positionPlayerY-57;
+			document.getElementById('canvas').appendChild(newPlayer);
+			addTile1 = document.createElement('div');
+			addTile1.classList.add('playerFace1');
+			newPlayer.appendChild(addTile1);
+			addTile2 = document.createElement('div');
+			addTile2.classList.add('playerFace2');
+			newPlayer.appendChild(addTile2);
+			addTile3 = document.createElement('div');
+			addTile3.classList.add('playerFace3');
+			newPlayer.appendChild(addTile3);
+		}
+		if(tileMap[i]==2){
+			newTile = document.createElement('div');
+			newTile.classList.add('canvas2');
+			newTile.style.left = positionPlayerX;
+			newTile.style.top = positionPlayerY-7;
+			document.getElementById('canvas').appendChild(newTile);
+
+			addTile1 = document.createElement('div');
+			addTile1.classList.add('test1');
+			addTile1.classList.add('test12');
+			addTile1.style.backgroundColor = '#bacc78';
+			newTile.appendChild(addTile1);
+			addTile2 = document.createElement('div');
+			addTile2.classList.add('test2');
+			addTile2.style.backgroundColor = '#9baf52';
+			newTile.appendChild(addTile2);
+			addTile3 = document.createElement('div');
+			addTile3.classList.add('test3');
+			addTile3.style.backgroundColor = '#7d9137';
+			newTile.appendChild(addTile3);
+		}
+	}
+}
+
+function clearPlayer(){
+	let parent = document.getElementById('player');
+	while(parent.firstChild){
+		parent.removeChild(parent.firstChild);
+	}
+
+	let teeest = document.getElementsByClassName('canvas2');
+	for(i=0;i<teeest.length;i++){
+		while(teeest[i].firstChild){
+			teeest[i].removeChild(teeest[i].firstChild);
+		}
+		teeest[i].remove();
+	}
+}
+
+createMap();
+createPlayer();
+lifespanPlayer();
+updateMap();
+</script>

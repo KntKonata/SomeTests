@@ -1,0 +1,186 @@
+<style>
+#canvas {
+	background: rgb(30,40,60);
+	width: 800px;
+	height: 600px;
+	position: relative;
+	box-shadow: 0 -20px 0 0 rgb(15,40,20) inset,
+				0 200px 0 0 rgba(0,0,0,.1) inset,
+				0 -100px 0 0 rgba(255,255,255,.05) inset;
+	overflow: hidden;
+}
+
+#canvas:after {
+	background: rgb(100,100,100);
+	content: ' ';
+	width: 75px;
+	height: 75px;
+	border-radius: 75px;
+	position: absolute;
+	box-shadow: 0 0 50px 0 rgba(200,200,200,.5),
+				-20px -20px 5px 0 rgb(200,200,200) inset;
+	top: 20;
+	left: 20;
+	opacity: .75;
+	z-index: 0;
+}
+
+.firework {
+	width: 1px;
+	height: 1px;
+	position: absolute;
+}
+
+.spark {
+	position: absolute;
+	border-radius: 100%;
+	z-index: 10;
+}
+</style>
+
+<body>
+	<div id='canvas'>
+		<!-- -->
+	</div>
+</body>
+
+<script>
+let fireworks = [];
+let fireworksFuse = [];
+let fireworksFuseInherit = [];
+let fireworksPosY = [];
+
+let sparksss = [];
+let sparkFuse = [];
+let sparkPosX = [];
+let sparkPosY = [];
+let sparkMomentumHozi = [];
+let sparkMomentumVert = [];
+let sparkOpacity = [];
+
+function createFireworks(){
+	let positionX = Math.floor(Math.random()*800);
+	let fuseTime = Math.floor(Math.random()*400+200);
+
+	let colorR = Math.floor(Math.random()*255+128);
+	let colorG = Math.floor(Math.random()*255+128);
+	let colorB = Math.floor(Math.random()*255+128);
+
+	newFirework = document.createElement('div');
+	newFirework.classList.add('firework');
+
+	newFirework.style.backgroundColor = 'rgb('+colorR+','+colorG+','+colorB+')';
+	newFirework.style.left = positionX;
+	newFirework.style.bottom = 0;
+
+	fireworks.push(fireworks.length);
+	fireworksFuse.push(fuseTime);
+	fireworksFuseInherit.push(fuseTime);
+	fireworksPosY.push(0);
+
+	document.getElementById('canvas').appendChild(newFirework);
+}
+
+function createSparks(positionX, positionY, id, fuse){
+	let fireW = document.getElementsByClassName('firework');
+
+	newSpark = document.createElement('div');
+	newSpark.classList.add('spark');
+
+	sparksss.push(sparksss.length);
+	sparkFuse.push(fuse);
+	sparkPosX.push(positionX);
+	sparkPosY.push(positionY);
+	sparkMomentumVert.push((Math.random()*10-5));
+	sparkMomentumHozi.push((Math.random()*10-5));
+	sparkOpacity.push(1);
+
+	newSpark.style.backgroundColor = fireW[id].style.backgroundColor;
+	newSpark.style.left = positionX;
+	newSpark.style.bottom = positionY;
+
+	document.getElementById('canvas').appendChild(newSpark);
+}
+
+function detonateFirework(id){
+	let fireW = document.getElementsByClassName('firework');
+
+	randTestOfdoom = Math.floor(fireworksFuseInherit[id]/12);
+
+	for(i=0;i<randTestOfdoom;i++){
+		createSparks(fireW[id].style.left, fireworksPosY[id], id, randTestOfdoom);
+	}
+
+	fireW[id].remove();
+
+	var index = fireworksFuse.indexOf(0);
+	fireworks.splice(index, 1);
+	fireworksPosY.splice(index, 1);
+	fireworksFuse.splice(index, 1);
+	fireworksFuseInherit.splice(index, 1);
+
+}
+
+function lifespanFireworks(){
+	let fireW = document.getElementsByClassName('firework');
+	for(i=0;i<fireworks.length;i++){
+		if(fireworksFuse[i]<=0){
+			detonateFirework(i);
+		} else {
+			fireworksPosY[i] += 1;
+			fireworksFuse[i] -= 1;
+			fireW[i].style.bottom = fireworksPosY[i];
+		}
+	}
+
+	setTimeout(lifespanFireworks, 10);
+}
+
+function lifespanSparks(){
+	let sparKy = document.getElementsByClassName('spark');
+	for(i=0;i<sparksss.length;i++){
+		if(sparkFuse.length!=0){
+			if(sparkFuse[i]!=0){
+				sparkPosX[i] = parseFloat(sparkPosX[i])+sparkMomentumHozi[i];
+				sparkPosY[i] = parseFloat(sparkPosY[i])+sparkMomentumVert[i];
+
+				sparkOpacity[i] = sparkFuse[i]/10;
+
+				sparKy[i].style.left = sparkPosX[i];
+				sparKy[i].style.bottom = sparkPosY[i];
+				sparKy[i].style.opacity = sparkOpacity[i];
+
+				sparKy[i].style.width = Math.floor(sparkFuse[i]/5);
+				sparKy[i].style.height = Math.floor(sparkFuse[i]/5);
+
+				sparKy[i].style.boxShadow = "0 0 30px 0px "+sparKy[i].style.backgroundColor;
+
+				sparkFuse[i] -= 1;
+			} else {
+				sparKy[i].remove();
+				var index = sparkFuse.indexOf(0);
+				sparksss.splice(index, 1);
+				sparkPosX.splice(index, 1);
+				sparkPosY.splice(index, 1);
+				sparkMomentumHozi.splice(index, 1);
+				sparkMomentumVert.splice(index, 1);
+				sparkOpacity.splice(index, 1);
+				sparkFuse.splice(index, 1);
+			}
+		}
+	}
+
+	setTimeout(lifespanSparks, 10);
+}
+
+function generateFireworks(){
+	createFireworks();
+
+	setTimeout(generateFireworks, 500);
+}
+
+generateFireworks();
+
+lifespanFireworks();
+lifespanSparks();
+</script>

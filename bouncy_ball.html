@@ -1,0 +1,94 @@
+<style>
+#box {
+	border: 2px solid rgb(200,200,200);
+	background-color: rgb(230,230,230);
+	width: 400px;
+	height: 300px;
+	position: relative;
+}
+
+.ball {
+	position: absolute;
+	background: red;
+	width: 20px;
+	height: 20px;
+	border-radius: 20px;
+	top: 140;
+	left: 190;
+}
+
+input[type='button'] {
+	width: 404px;
+	height: 50px;
+	border: 2px solid rgb(50,150,50);
+	background-color: rgb(75,200,75);
+	color: rgb(25,100,25);
+	font-size: 25px;
+
+}
+</style>
+
+<body>
+	<div id="box">
+		<!-- -->
+	</div>
+	<input type="button" onclick="createBall()" value="Create more balls" />
+</body>
+
+<script>
+let balls = [];
+let ballMomentumX = [];
+let ballMomentumY = [];
+let ballPosX = [];
+let ballPosY = [];
+
+function createBall(){
+	newBall = document.createElement('div');
+	newBall.classList.add('ball');
+
+	let ColorR = Math.floor(Math.random()*255);
+	let ColorG = Math.floor(Math.random()*255);
+	let ColorB = Math.floor(Math.random()*255);
+
+	newBall.style.backgroundColor = ('rgb('+ColorR+','+ColorG+','+ColorB+')');
+
+	let ballsNumb = balls.length;
+
+	balls.push(ballsNumb);
+	ballMomentumX.push(Math.floor(Math.random()*5+1));
+	ballMomentumY.push(Math.floor(Math.random()*5+1));
+	ballPosX.push(190);
+	ballPosY.push(140);
+
+	document.getElementById('box').appendChild(newBall);
+}
+
+function lifespanBall(){
+	let ball = document.getElementsByClassName('ball');
+
+	for(i=0;i<balls.length;i++){
+
+		ballPosX[i] += ballMomentumX[i];
+		ball[i].style.left = ballPosX[i];
+
+		ballPosY[i] += ballMomentumY[i];
+		ball[i].style.top = ballPosY[i];
+
+		if(ballPosX[i]<0){
+			ballMomentumX[i] = ballMomentumX[i] - ( ballMomentumX[i] * 2 );
+		} else if(ballPosX[i]>380){
+			ballMomentumX[i] = ballMomentumX[i] - ( ballMomentumX[i] * 2 );
+		} else if(ballPosY[i]<0){
+			ballMomentumY[i] = ballMomentumY[i] - ( ballMomentumY[i] * 2 );
+		} else if(ballPosY[i]>280){
+			ballMomentumY[i] = ballMomentumY[i] - ( ballMomentumY[i] * 2 );
+		}
+
+		
+	}
+
+	setTimeout(lifespanBall, 10);
+}
+
+lifespanBall();
+</script>

@@ -1,0 +1,524 @@
+<style>
+#space {
+	background: rgb(30,40,60);
+	width: 800px;
+	height: 600px;
+	position: relative;
+	overflow: hidden;
+}
+
+#earth {
+	background: rgb(50,150,150);
+	width: 90px;
+	height: 90px;
+	border-radius: 100%;
+	position: absolute;
+	overflow: hidden;
+	top: 25px;
+	left: 25px;
+	box-shadow: 0 0 0 25px rgba(255,255,255,.125),
+				0 0 0 10px rgba(255,255,255,.125),
+				0 0 0 3px rgba(255,255,255,.125);
+}
+
+#earth>.continent {
+	background: rgb(150,150,50);
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	overflow: hidden;
+	border-radius: 10px;
+}
+
+#earth>.cloud {
+	background: rgba(255,255,255,.5);
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	overflow: hidden;
+	border-radius: 10px;
+}
+
+#mars {
+	background: rgb(200,75,50);
+	width: 90px;
+	height: 90px;
+	border-radius: 100%;
+	position: absolute;
+	overflow: hidden;
+	bottom: 25px;
+	right: 25px;
+	box-shadow: 0 0 0 25px rgba(255,255,255,.125),
+				0 0 0 10px rgba(255,255,255,.125),
+				0 0 0 3px rgba(255,255,255,.125);
+}
+
+#mars>.continent {
+	background: rgb(200,100,50);
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	overflow: hidden;
+	border-radius: 10px;
+}
+
+#mars>.cloud {
+	background: rgb(150,50,50);
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	overflow: hidden;
+	border-radius: 10px;
+}
+
+#meteor:before {
+	position: absolute;
+	width: 30px;
+	height: 20px;
+	border-radius: 20px;
+	background: rgba(255,255,125,.5);
+	content: ' ';
+}
+
+#meteor {
+	position: absolute;
+	width: 40px;
+	height: 20px;
+	background: rgba(255,125,0,.5);
+	border-radius: 20px;
+	transform: rotate(-0.125turn);
+}
+
+.flameRed {
+	background: rgba(255,125,0,.5);
+	margin-top: 2.5px;
+	width: 60px;
+	border-radius: 15px;
+	height: 15px;
+}
+
+.flameYellow {
+	position: relative;
+	background: rgba(255,255,125,.5);
+	top: -12.5px;
+	width: 50px;
+	border-radius: 10px;
+	height: 10px;
+}
+
+.flameWhite {
+	position: relative;
+	background: rgba(255,255,255,.5);
+	top: -20px;
+	left: 2px;
+	width: 40px;
+	border-radius: 5px;
+	height: 5px;
+}
+
+.meteorSphere {
+	position: relative;
+	background: maroon;
+	top: -30px;
+	left: 2px;
+	width: 15px;
+	height: 15px;
+	border-radius: 15px;
+}
+
+.star:before {
+	content: ' ';
+	background: white;
+	width: 1px;
+	height: 15px;
+	position: absolute;
+	border-radius: 10px;
+	left: 2;
+	top: -5;
+}
+
+.star:after {
+	content: ' ';
+	background: white;
+	width: 15px;
+	height: 1px;
+	position: absolute;
+	border-radius: 10px;
+	top: 2;
+	left: -5;
+}
+
+.star {
+	background: white;
+	opacity: .5;
+	width: 5px;
+	height: 5px;
+	position: absolute;
+	border-radius: 5px;
+}
+
+.starB:before {
+	content: ' ';
+	background: white;
+	width: 2px;
+	height: 30px;
+	position: absolute;
+	border-radius: 10px;
+	left: 4;
+	top: -10;
+}
+
+.starB:after {
+	content: ' ';
+	background: white;
+	width: 30px;
+	height: 2px;
+	position: absolute;
+	border-radius: 10px;
+	top: 4;
+	left: -10;
+}
+
+.starB {
+	background: white;
+	opacity: .5;
+	width: 10px;
+	height: 10px;
+	position: absolute;
+	border-radius: 10px;
+}
+
+.starsS {
+	background: white;
+	opacity: .5;
+	width: 2px;
+	height: 2px;
+	position: absolute;
+	border-radius: 10px;
+}
+
+#falcon:before {
+	background: rgba(0,0,0,0);
+	width: 30px;
+	height: 30px;
+	top: -30;
+	left: 25;
+	position: relative;
+	content: ' ';
+
+	border-bottom: 30px solid silver;
+	border-right: 15px solid rgba(0,0,0,0);
+}
+
+#falcon:after {
+	background: rgba(0,0,0,0);
+	width: 5px;
+	height: 5px;
+	top: -30;
+	left: -15;
+	position: relative;
+	content: ' ';
+
+	border-bottom: 30px solid silver;
+	border-left: 15px solid rgba(0,0,0,0);
+}
+
+#falcon {
+	background-color: silver;
+	width: 40px;
+	height: 40px;
+	border-radius: 40px;
+	box-shadow: 0 10px 5px -5px rgba(0,200,200,1);
+
+
+	position: absolute;
+	left: 45px;
+	top: 45px;
+}
+
+#moon {
+	position: absolute;
+	background: rgba(0,0,0,0);
+	width: 20px;
+	height: 20px;
+	left: 60;
+	top: 60;
+}
+
+#moon:after {
+	background: silver;
+	width: 20px;
+	height: 20px;
+	position: absolute;
+	border-radius: 20px;
+	margin-left: 70px;
+	content: ' ';
+}
+</style>
+
+<body>
+	<div id='space'>
+		<!-- -->
+	</div>
+</body>
+
+<script>
+	let rotation = -90;
+	let momentumFalcon = 0;
+	let positionFalconX = 45;
+	let positionFalconY = 45;
+
+	let rotationEarth =0;
+
+	function createFalcon(){
+		newFalcon = document.createElement('div');
+		newFalcon.setAttribute('id','falcon');
+		document.getElementById('space').appendChild(newFalcon);
+	}
+
+	function lifespanFalcon(){
+		let falcon = document.getElementById('falcon');
+		if(momentumFalcon!=0){
+			momentumFalcon-=0.5;
+		}
+
+		falcon.style.boxShadow = "0 "+momentumFalcon+"px 5px -5px rgba(0,200,200,"+momentumFalcon/10+")";
+
+		positionFalconX += momentumFalcon * Math.cos(rotation * Math.PI / 180);
+		positionFalconY += momentumFalcon * Math.sin(rotation * Math.PI / 180);
+		falcon.style.left = positionFalconX;
+		falcon.style.top = positionFalconY;
+
+		setTimeout(lifespanFalcon, 50);
+	}
+
+	document.onkeypress = function (e) {
+		let falcon = document.getElementById('falcon');
+		//console.log(e.keyCode);
+		if(e.keyCode==119){momentumFalcon=10;}
+		if(e.keyCode==100){rotation+=10;}
+		if(e.keyCode==97){rotation-=10;}
+
+		falcon.style.transform = "rotate("+(rotation+90)+"deg)";
+	};
+
+	function createContinentEarth(){
+		newContinent = document.createElement('div');
+		newContinent.style.height = 10;
+		newContinent.style.width = Math.floor((Math.random()*60)+20);
+		newContinent.style.left = Math.floor((Math.random()*130)-40);
+		newContinent.style.top = Math.floor((Math.random()*90)+1);
+		newContinent.classList.add('continent');
+		document.getElementById('earth').appendChild(newContinent);
+	}
+
+	function createCloudEarth(){
+		newCloud = document.createElement('div');
+		newCloud.style.height = 10;
+		newCloud.style.width = Math.floor((Math.random()*60)+20);
+		newCloud.style.left = Math.floor((Math.random()*130)-40);
+		newCloud.style.top = Math.floor((Math.random()*90)+1);
+		newCloud.classList.add('cloud');
+		document.getElementById('earth').appendChild(newCloud);
+	}
+
+	function createEarth(){
+		newEarth = document.createElement('div');
+		newEarth.setAttribute('id','earth');
+		document.getElementById('space').appendChild(newEarth);
+		for(i=0;i<10;i++){createContinentEarth();}
+		for(i=0;i<10;i++){createCloudEarth();}
+	}
+
+	function createMoon(){
+		newMoon = document.createElement('div');
+		newMoon.setAttribute('id','moon');
+		document.getElementById('space').appendChild(newMoon);
+		//for(i=0;i<10;i++){createContinentEarth();}
+		//for(i=0;i<10;i++){createCloudEarth();}
+	}
+
+	function lifespanEarth(){
+		let moon = document.getElementById('moon');
+		rotationEarth++;
+		moon.style.transform = "rotate("+(rotationEarth)+"deg)";
+
+		setTimeout(lifespanEarth, 10);
+	}
+
+	function createContinentMars(){
+		newContinent = document.createElement('div');
+		newContinent.style.height = 10;
+		newContinent.style.width = Math.floor((Math.random()*60)+20);
+		newContinent.style.left = Math.floor((Math.random()*130)-40);
+		newContinent.style.top = Math.floor((Math.random()*90)+1);
+		newContinent.classList.add('continent');
+		document.getElementById('mars').appendChild(newContinent);
+	}
+
+	function createCloudMars(){
+		newCloud = document.createElement('div');
+		newCloud.style.height = 10;
+		newCloud.style.width = Math.floor((Math.random()*60)+20);
+		newCloud.style.left = Math.floor((Math.random()*130)-40);
+		newCloud.style.top = Math.floor((Math.random()*90)+1);
+		newCloud.classList.add('cloud');
+		document.getElementById('mars').appendChild(newCloud);
+	}
+
+	function createMars(){
+		newMars = document.createElement('div');
+		newMars.setAttribute('id','mars');
+		document.getElementById('space').appendChild(newMars);
+		for(i=0;i<10;i++){createCloudMars();}
+		for(i=0;i<10;i++){createContinentMars();}
+	}
+
+	function createMeteorFlames(){
+		newFlameRed = document.createElement('div');
+		newFlameRed.setAttribute('class','flameRed');
+		document.getElementById('meteor').appendChild(newFlameRed);
+		newFlameYellow = document.createElement('div');
+		newFlameYellow.setAttribute('class','flameYellow');
+		document.getElementById('meteor').appendChild(newFlameYellow);
+		newFlameWhite = document.createElement('div');
+		newFlameWhite.setAttribute('class','flameWhite');
+		document.getElementById('meteor').appendChild(newFlameWhite);
+		newSphere = document.createElement('div');
+		newSphere.setAttribute('class','meteorSphere');
+		document.getElementById('meteor').appendChild(newSphere);
+	}
+
+	function createMeteor(){
+		newMeteor = document.createElement('div');
+		newMeteor.setAttribute('id','meteor');
+		document.getElementById('space').appendChild(newMeteor);
+		createMeteorFlames();
+		meteorLifeSpan();
+	}
+
+	function createStar(){
+		newStar = document.createElement('div');
+		newStar.setAttribute('class','star');
+		newStar.style.left = Math.floor((Math.random()*800)+1);
+		newStar.style.top = Math.floor((Math.random()*600)+1);
+		document.getElementById('space').appendChild(newStar);
+	}
+
+	function createStarB(){
+		newStar = document.createElement('div');
+		newStar.setAttribute('class','starB');
+		newStar.style.left = Math.floor((Math.random()*800)+1);
+		newStar.style.top = Math.floor((Math.random()*600)+1);
+		document.getElementById('space').appendChild(newStar);
+	}
+
+	function createStarS(){
+		newStar = document.createElement('div');
+		newStar.setAttribute('class','starsS');
+		newStar.style.left = Math.floor((Math.random()*800)+1);
+		newStar.style.top = Math.floor((Math.random()*600)+1);
+		document.getElementById('space').appendChild(newStar);
+	}
+
+	let blink = 100;
+
+	function blinkingStar(){
+		let stars = document.getElementsByClassName('star');
+		if(blink==0){
+			blink = 100;
+		} else if (blink<=50 && blink!=0) {
+			blink--;
+			for(i=0;i<stars.length;i++){
+				stars[i].style.opacity = blink/50;
+			}
+		} else if (blink>50) {
+			blink--;
+			for(i=0;i<stars.length;i++){
+				stars[i].style.opacity = 50/blink;
+			}
+		}
+
+		setTimeout(blinkingStar, 50);
+	}
+
+	let blinkB = 100;
+
+	function blinkingStarB(){
+		let starsB = document.getElementsByClassName('starB');
+		if(blinkB==0){
+			blinkB = 100;
+		} else if (blinkB<=50 && blinkB!=0) {
+			blinkB--;
+			for(i=0;i<starsB.length;i++){
+				starsB[i].style.opacity = blinkB/50;
+			}
+		} else if (blinkB>50) {
+			blinkB--;
+			for(i=0;i<starsB.length;i++){
+				starsB[i].style.opacity = 50/blinkB;
+			}
+		}
+
+		setTimeout(blinkingStarB, 100);
+	}
+
+	let blinkS = 100;
+
+	function blinkingStarS(){
+		let starsS = document.getElementsByClassName('starsS');
+		if(blinkS==0){
+			blinkS = 100;
+		} else if (blinkS<=50 && blinkS!=0) {
+			blinkS--;
+			for(i=0;i<starsS.length;i++){
+				starsS[i].style.opacity = blinkS/50;
+			}
+		} else if (blinkS>50) {
+			blinkS--;
+			for(i=0;i<starsS.length;i++){
+				starsS[i].style.opacity = 50/blinkS;
+			}
+		}
+
+		setTimeout(blinkingStarS, 25);
+	}
+
+	let posLeftMeteor = Math.floor(Math.random()*800);
+	let posTopMeteor = -50;
+
+	function meteorLifeSpan(){
+		document.getElementById('meteor').style.left = posLeftMeteor;
+		document.getElementById('meteor').style.top = posTopMeteor;
+
+		if(posLeftMeteor<=0||posTopMeteor>=600){
+			posLeftMeteor = Math.floor(Math.random()*800);
+			posTopMeteor = -50;
+		} else {
+			posLeftMeteor--;
+			posTopMeteor++;
+		}
+
+		setTimeout(meteorLifeSpan, 1);
+	}
+
+	function createAll(test){
+		if(test==0){
+			for(i=0;i<20;i++){createStar();}
+			for(i=0;i<10;i++){createStarB();}
+			for(i=0;i<40;i++){createStarS();}
+			blinkingStar();
+			blinkingStarB();
+			blinkingStarS();
+		}
+		createEarth();
+		createMoon();
+		lifespanEarth();
+		createMars();
+		createMeteor();
+		createFalcon();
+		lifespanFalcon();
+	}
+
+	createAll(0);
+</script>
